@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Mentor
+# from .models import Mentor
+from users.models.mentors import Mentor
 
 
 class UserSerializer(serializers.ModelSerializer):

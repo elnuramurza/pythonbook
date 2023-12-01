@@ -8,6 +8,6 @@ class Mentor(models.Model):
             on_delete=models.PROTECT,
             related_name="mentor",
             verbose_name="Ментор"
-        ),
+        )
     name = models.CharField(max_length=60)
     description = models.TextField(null=True,blank=True)
