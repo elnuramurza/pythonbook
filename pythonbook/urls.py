@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/usersapp/", include("users.urls", namespace="usersapp")),
     path("api/task/", include("task.urls", namespace="task")),
-    # path("api/tasks/", include("task.urls", namespace="tasks")),
+    path("api/answer/", include("task.urls", namespace="answer")),
 ]
