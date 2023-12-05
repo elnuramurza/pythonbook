@@ -1,6 +1,7 @@
 from django.db import models
 from users.models.mentors import Mentor
 from users.models.profiles import Profile
+from django.contrib.auth.models import User
 
 difficulty_choices = (
     (1, "Очень лёгкий"),
@@ -14,7 +15,7 @@ class Task(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     difficulty = models.IntegerField(choices=difficulty_choices)
-    created_by = models.ForeignKey(Mentor, models.PROTECT)
+    created_by = models.ForeignKey(User, models.PROTECT)
     # created_by = models.OneToOneField(Mentor, on_delete=models.CASCADE)
     # upload_by = models.ForeignKey(Profile, on_delete=models.CASCADE)
 

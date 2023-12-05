@@ -2,57 +2,49 @@ from django.test import TestCase
 from django.urls import reverse_lazy
 from task.models.task import *
 from django.contrib.auth.models import User
-
+from .factories import *
 # Create your tests here.
 
-class TaskTestCase(TestCase):
-    def test_get_users_list_should_success(self):
-        response = self.client.get(reverse_lazy("task:list"))
+class TestTaskList(TestCase):
+    def test_task_list_should_success(self):
+        for i in range(3):
+            task_obj = TestTaskFactory(name=f"test task number {i}")
+
+        created_by = MentorFactory(
+            user=task_obj.created_by
+        )
+
+        response = self.client.get(reverse_lazy("task:list"))        
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "test task number 0")
+        self.assertContains(response, "test task number 1")
+        self.assertContains(response, "test task number 2")
 
 class TestTaskDetail(TestCase):
-    def test_task_detail_should_success(self):
-        task_object = Task.objects.create(
-            name="task_1",
-            description = "wqdqw",
-            difficulty = 1,
-            created_by = Mentor.objects.create(
-                user = User.objects.create(
-                    username= 'test_user_1',
-                    password="qwqewrtert"),
-                name = 'mentor1'
-            ))
-        print(f"{task_object.name}|{task_object.description}|{task_object.difficulty}|{task_object.created_by}")
+    def test_one_task_via_factory_boy(self):
+        task_object = TestTaskFactory()
         response = self.client.get(f'/api/task/detail/{task_object.id}/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, task_object.name)
 
-class AnswerTestCase(TestCase):
-    def test_get_answer_list_should_success(self):
-        response = self.client.get(reverse_lazy("answer:list"))
-        self.assertEqual(response.status_code, 200)
+# class TestAnswerList(TestCase):
+#     def test_answer_list_should_success(self):
+#         for i in range(3):
+#             answer_obj = TestAnswerFactory(txt=f"test answer number {i}")
+
+#         profile = ProfileFactory(
+#             user=answer_obj.profile
+#         )
+
+#         response = self.client.get(reverse_lazy("answer:list"))        
+#         self.assertEqual(response.status_code, 200)
+#         self.assertContains(response, "test answer number 0")
+#         self.assertContains(response, "test answer number 1")
+#         self.assertContains(response, "test answer number 2")
 
 class TestAnswerDetail(TestCase):
-    def test_answer_detail_should_success(self):
-        answer_object = Answer.objects.create(
-            txt="answer_test_1",
-            profile = Profile.objects.create(
-                user = User.objects.create(
-                    username= 'test_user_2',
-                    password="qwerty"
-                ),
-                name = 'profile1'),
-            task= Task.objects.create(
-                name="task_2",
-                description = "wqdqw",
-                difficulty = 2,
-                created_by = Mentor.objects.create(
-                    user = User.objects.create(
-                        username= 'test_user_3',
-                        password="qweertasd"),
-                    name = 'mentor2'
-            )))
-        print(answer_object.txt)
-        response = self.client.get(f'/api/answer/detail/{answer_object.id}/')
+    def test_one_answer_via_factory_boy(self):
+        answer_obj = TestAnswerFactory()
+        response = self.client.get(f'/api/answer/detail/{answer_obj.id}/')
         self.assertEqual(response.status_code, 200)
-        # self.assertContains(response, answer_object.txt)
+        # self.assertContains(response, answer_obj.txt)
