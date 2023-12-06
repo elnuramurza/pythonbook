@@ -11,6 +11,25 @@ class StudentDetailAPIView(APIView):
         serializer = StudentsSerializer(instance=task_object)
         return Response(serializer.data)
     
+    def put(self, request, *args, **kwargs):
+        student_object = Student.objects.get(pk=kwargs.get("pk"))
+
+        serializer = StudentsSerializer(
+            instance=student_object,
+            data=request.data
+        )
+        if serializer.is_valid():
+            student_object=serializer.save()
+            return Response(serializer.data, 202)
+        else:
+            return Response(serializer.errors, 400)
+    
+    def delete(self, request, *args, **kwargs):
+        student_object= Student.objects.get(pk=kwargs.get("pk"))  
+        student_object.delete()
+
+        
+    
 class StudentsView(APIView):
     def get(self, request, *args, **kwargs):
         student_list = Task.objects.all()
