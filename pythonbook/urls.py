@@ -16,17 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from task.views.task import *
-from students.views import *
-from students.serializers import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/usersapp/", include("users.urls", namespace="usersapp")),
     path("api/task/", include("task.urls", namespace="task")),
     # path("api/answer/", include("task.urls", namespace="answer")),
-    path('api/answer/detail/<int:pk>/', AnswerDetailAPIView.as_view(), name="answer-detail"),
-    path('api/answer/list/', AnswersView.as_view(), name='list'),
-    path('api/student/detail/<int:pk>/', StudentDetailAPIView.as_view(), name="student-detail"),
-    path('api/student/list/', StudentsView.as_view(), name="list"),
+    path('api/answer/', include("task.answer_urls", namespace="answer")),
+    path("api/student/", include("students.urls", namespace="student")),
 ]
