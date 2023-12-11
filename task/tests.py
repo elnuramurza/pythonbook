@@ -27,20 +27,21 @@ class TestTaskDetail(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, task_object.name)
 
-# class TestAnswerList(TestCase):
-#     def test_answer_list_should_success(self):
-#         for i in range(3):
-#             answer_obj = TestAnswerFactory(txt=f"test answer number {i}")
+class TestAnswerList(TestCase):
+    def test_answer_list_should_success(self):
+        for i in range(3):
+            answer_obj = TestAnswerFactory(txt=f"test answer number {i}")
 
-#         profile = ProfileFactory(
-#             user=answer_obj.profile
-#         )
-
-#         response = self.client.get(reverse_lazy("answer:list"))        
-#         self.assertEqual(response.status_code, 200)
-#         self.assertContains(response, "test answer number 0")
-#         self.assertContains(response, "test answer number 1")
-#         self.assertContains(response, "test answer number 2")
+        # profile = ProfileFactory(
+        #     # user=answer_obj.profile
+        # )
+        student = StudentFactory()
+        response = self.client.get(reverse_lazy("answer:list"))        
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "test answer number 0")
+        self.assertContains(response, "test answer number 1")
+        self.assertContains(response, "test answer number 2")
+        print(answer_obj.txt)
 
 class TestAnswerDetail(TestCase):
     def test_one_answer_via_factory_boy(self):

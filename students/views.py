@@ -2,19 +2,22 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import *
+from .models import *
+from rest_framework.generics import CreateAPIView,RetrieveAPIView, RetrieveUpdateDestroyAPIView, ListCreateAPIView,ListAPIView,UpdateAPIView,DestroyAPIView
+from rest_framework import viewsets
 
 # Create your views here.
 
 class StudentDetailAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        task_object = Student.objects.get(pk=kwargs.get("pk"))
-        serializer = StudentsSerializer(instance=task_object)
+        student_object = Student.objects.get(pk=kwargs.get("pk"))
+        serializer = StudentsSerializer(instance=student_object)
         return Response(serializer.data)
     
     def put(self, request, *args, **kwargs):
-        student_object = Student.objects.get(pk=kwargs.get("pk"))
+        student_object= Student.objects.get(pk=kwargs.get("pk"))
 
-        serializer = StudentsSerializer(
+        serializer = StudentUpdateSerializer(
             instance=student_object,
             data=request.data
         )
@@ -27,12 +30,11 @@ class StudentDetailAPIView(APIView):
     def delete(self, request, *args, **kwargs):
         student_object= Student.objects.get(pk=kwargs.get("pk"))  
         student_object.delete()
-
-        
+        return Response("Запись о студенте удалена", 204)  
     
 class StudentsView(APIView):
     def get(self, request, *args, **kwargs):
-        student_list = Task.objects.all()
+        student_list = Student.objects.all()
         serializer = StudentsSerializer(student_list, many=True)
         return Response(serializer.data)
 
@@ -44,3 +46,37 @@ class StudentsView(APIView):
             return Response("Успешно создано", 201)
         else:
             return Response(serializer.error_messages, 400)
+
+class StudentGListAPIView(ListAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+
+class StudentGCreateAPIView(CreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+        
+class StudentGDetailAPIView(RetrieveAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+
+class StudentGUpdateAPIView(UpdateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+
+class StudentGDestroyAPIView(DestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+
+
+
+class StudentGenericDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentsSerializer
+    
+class StudentsGenericView(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentCreateSerializer
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentCreateSerializer

@@ -4,6 +4,7 @@ from users.models.mentors import Mentor
 from users.models.profiles import Profile
 from task.models.task import *
 from django.contrib.auth.hashers import make_password
+from students.models import Student
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -19,11 +20,18 @@ class MentorFactory(factory.django.DjangoModelFactory):
     name = 'test_mentor'
     user = factory.SubFactory(UserFactory)
 
-class ProfileFactory(factory.django.DjangoModelFactory):
+# class ProfileFactory(factory.django.DjangoModelFactory):
+#     class Meta:
+#         model = Profile
+#     user = factory.SubFactory(UserFactory)
+#     name = factory.Sequence(lambda n: f"test_profile {n}")
+    
+class StudentFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = Profile
+        model = Student
     user = factory.SubFactory(UserFactory)
-    name = factory.Sequence(lambda n: f"test_profile {n}")
+    phone_number = factory.Sequence(lambda n: f"test_ph_number_{n}")
+    programming_language = factory.Sequence(lambda n: f"test_progr_lang_{n}")
 
 class TestTaskFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -37,5 +45,6 @@ class TestAnswerFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Answer
     task = factory.SubFactory(TestTaskFactory)
-    profile = factory.SubFactory(ProfileFactory)
+    # profile = factory.SubFactory(ProfileFactory)
+    student = factory.SubFactory(StudentFactory)
     txt = factory.Sequence(lambda n: f"Test answer {n}")
